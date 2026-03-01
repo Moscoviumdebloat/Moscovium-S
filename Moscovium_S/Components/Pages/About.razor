@@ -1,0 +1,62 @@
+﻿@page "/about"
+@using System.Diagnostics
+@using System.IO.Compression
+@using Microsoft.Win32
+@using System.Drawing.Imaging
+@using System.Runtime.InteropServices
+
+<Topbar />
+
+<main>
+    <h1 class="Titlebar">About</h1>
+  
+    
+    <div class="Mainteract">
+        <img src="@imgloc" />
+      <p>Version S.1.0</p>
+        <p>A Windows utility toolbox for debloating, system tweaks, wallpaper management, and gaming configs.</p>
+      <h2>Credits</h2>
+      <h5 class="Crdtbn">
+            
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#c23dff"><path d="M20 5.99999L20 18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V6C4 4.89543 4.89543 4 6 4H18C19.1045 4 19.9999 4.89543 20 5.99999Z" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 9V4" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>Product of Unknown Cyberia</span>
+      </h5>
+        <h5 class="Crdtbn">
+
+         
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#c23dff"><path d="M21 2L20 3" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 2L4 3" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 16L20 15" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 16L4 15" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9 18H15" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10 21H14" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M11.9998 3C7.9997 3 5.95186 4.95029 5.99985 8C6.02324 9.48689 6.4997 10.5 7.49985 11.5C8.5 12.5 9 13 8.99985 15H14.9998C15 13.0001 15.5 12.5 16.4997 11.5001L16.4998 11.5C17.4997 10.5 17.9765 9.48689 17.9998 8C18.0478 4.95029 16 3 11.9998 3Z" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>Idea by Yabosen</span>
+        </h5>
+        <h5 class="Crdtbn">
+
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#c23dff"><path d="M13.5 6L10 18.5" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.5 8.5L3 12L6.5 15.5" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M17.5 8.5L21 12L17.5 15.5" stroke="#c23dff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>Code by Akumarin / Bendy (Megamer Studios)</span>
+        </h5>
+
+        <h2>Built with</h2>
+        <ul>
+            <li>.NET 10</li>
+            <li>Windows Form Apps</li>
+            <li>Blazor</li>
+        </ul>
+        <div></div>
+        <a href="https://github.com/Moscoviumdebloat" target="_blank">
+        <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#c7b0e1"><path d="M16 22.0268V19.1568C16.0375 18.68 15.9731 18.2006 15.811 17.7506C15.6489 17.3006 15.3929 16.8902 15.06 16.5468C18.2 16.1968 21.5 15.0068 21.5 9.54679C21.4997 8.15062 20.9627 6.80799 20 5.79679C20.4558 4.5753 20.4236 3.22514 19.91 2.02679C19.91 2.02679 18.73 1.67679 16 3.50679C13.708 2.88561 11.292 2.88561 8.99999 3.50679C6.26999 1.67679 5.08999 2.02679 5.08999 2.02679C4.57636 3.22514 4.54413 4.5753 4.99999 5.79679C4.03011 6.81549 3.49251 8.17026 3.49999 9.57679C3.49999 14.9968 6.79998 16.1868 9.93998 16.5768C9.61098 16.9168 9.35725 17.3222 9.19529 17.7667C9.03334 18.2112 8.96679 18.6849 8.99999 19.1568V22.0268" stroke="#c7b0e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9 20.0267C6 20.9999 3.5 20.0267 2 17.0267" stroke="#c7b0e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>GitHub</span>
+        </a>
+    </div>
+    
+
+</main>
+<Bottombar />
+@code {
+    string imgloc = "";
+    protected override void OnInitialized()
+    {
+        var wwwrootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
+
+        var filepath = Path.Combine("Resources", "Illustration.gif");
+        var bytes = File.ReadAllBytes(filepath);
+        imgloc = $"data:image/gif;base64,{Convert.ToBase64String(bytes)}";
+    }
+}

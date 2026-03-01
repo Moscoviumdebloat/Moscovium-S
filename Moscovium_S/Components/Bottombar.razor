@@ -1,0 +1,41 @@
+﻿@inject NavigationManager NavigationManager
+@using System.Timers
+<div class="Botbar2">
+    <h4>@Timezenci</h4>
+    <h6>@Timeother</h6>
+</div>
+<div class="botbar">
+  
+    
+    <button @onclick="GoTo">
+        <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#FFFFFF"><path d="M12 11.5V16.5" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 7.51L12.01 7.49889" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+
+</div>
+
+@code {
+    public string Timezenci { get; set; }
+    string Timeother { get; set; }
+    System.Timers.Timer timer = new System.Timers.Timer(100);
+    public void GoTo()
+    {
+        NavigationManager.NavigateTo(@"/about");
+
+    }
+    protected override void OnInitialized()
+    {
+        Timeother = DateTime.Now.ToString("D");
+        Timezenci = DateTime.Now.ToString("t");
+        timer.Elapsed += OnTimedEvent;
+        timer.AutoReset = true;
+        timer.Enabled = true;
+
+    }
+    private void OnTimedEvent(Object source, ElapsedEventArgs e)
+    {
+        Timezenci = DateTime.Now.ToString("t");
+        Timeother = DateTime.Now.ToString("D");
+        InvokeAsync(StateHasChanged);
+    }
+
+}

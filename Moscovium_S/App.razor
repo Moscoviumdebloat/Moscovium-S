@@ -1,0 +1,31 @@
+﻿@using Moscovium_S.Components
+
+<CascadingValue Value="ThemeService">
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <Topbar />
+            <h1>Page not found</h1>
+        </NotFound>
+    </Router>
+</CascadingValue>
+
+@code {
+    [Inject] private ThemeService ThemeService { get; set; }
+    [Inject] private IJSRuntime JS { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ThemeService.OnThemeChanged += UpdateTheme;
+        UpdateTheme(); 
+    }
+
+    private void UpdateTheme()
+    {
+        var theme = ThemeService.IsLightMode ? "light" : "dark";
+        JS.InvokeVoidAsync("document.documentElement.setAttribute", "data-theme", theme);
+    }
+}

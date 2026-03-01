@@ -1,0 +1,331 @@
+﻿@page "/"
+@using System.Diagnostics
+@using System.IO.Compression
+@using Microsoft.Win32
+@using System.Drawing.Imaging
+@using System.Runtime.InteropServices
+
+<Topbar />
+
+<main>
+    <h1 class="Titlebar">Home</h1>
+    @if (IsError)
+    {
+        <h3 style="color: red;">Error: @ErrorMessage</h3>
+    }
+    
+    <div class="Mainteract">
+
+       <button @onclick="WallpaperChange">
+            
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#FFFFFF"><path d="M21 3.6V20.4C21 20.7314 20.7314 21 20.4 21H3.6C3.26863 21 3 20.7314 3 20.4V3.6C3 3.26863 3.26863 3 3.6 3H20.4C20.7314 3 21 3.26863 21 3.6Z" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 16L10 13L21 18" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 10C14.8954 10 14 9.10457 14 8C14 6.89543 14.8954 6 16 6C17.1046 6 18 6.89543 18 8C18 9.10457 17.1046 10 16 10Z" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>Change Wallpaper</span>
+        </button>
+       @if(isChanging) {
+           <div style="margin: auto; width: 45%;">
+            <fieldset>
+                <legend><strong>Wallpaper type</strong></legend>
+                <label for="radio-1">
+                    <input type="radio" id="radio-1" name="radio" value="fill" checked="@(WPStyle == 0)" @onchange="(() => WPStyle = 0)" >
+                    Fill
+                </label>
+                <label for="radio-2">
+                        <input type="radio" id="radio-2" name="radio" value="Fit" checked="@(WPStyle == 1)" @onchange="(() => WPStyle = 1)">
+                    Fit
+                </label>
+                    <label for="radio-3">
+                        <input type="radio" id="radio-3" name="radio" value="Stretch" checked="@(WPStyle == 2)" @onchange="(() => WPStyle = 2)">
+                        Stretch
+                    </label>
+                    <label for="radio-4">
+                        <input type="radio" id="radio-4" name="radio" value="Tile" checked="@(WPStyle == 3)" @onchange="(() => WPStyle = 3)">
+                        Tile
+                    </label>
+                    <label for="radio-5">
+                        <input type="radio" id="radio-5" name="radio" value="Center" checked="@(WPStyle == 4)" @onchange="(() => WPStyle = 4)">
+                        Center
+                    </label>
+                    <label for="radio-6">
+                        <input type="radio" id="radio-6" name="radio" value="Span" checked="@(WPStyle == 5)" @onchange="(() => WPStyle = 5)">
+                        Span
+                    </label>
+            </fieldset>
+            <button @onclick="ChangeWallpaper">Okay</button>
+            </div>
+       }
+        <button @onclick="Retard" >
+            
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M6.67742 20.5673C2.53141 18.0212 0.758026 12.7584 2.71678 8.1439C4.87472 3.0601 10.7453 0.68822 15.8291 2.84617C20.9129 5.00412 23.2848 10.8747 21.1269 15.9585C20.2837 17.945 18.8736 19.5174 17.1651 20.5673" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M17 16V20.4C17 20.7314 17.2686 21 17.6 21H22" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 22.01L12.01 21.9989" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>Restart Explorer</span>
+        </button>
+        <button @onclick="VisualC" >
+            
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M6 20L18 20" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 4V16M12 16L15.5 12.5M12 16L8.5 12.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>Install Visual C++ Runtimes</span>
+        </button>
+        <button @onclick="OpenCntrl" >
+            
+            <svg width="24px" height="24px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M21 3.6V20.4C21 20.7314 20.7314 21 20.4 21H3.6C3.26863 21 3 20.7314 3 20.4V3.6C3 3.26863 3.26863 3 3.6 3H20.4C20.7314 3 21 3.26863 21 3.6Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15.5 7.5L12 12" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>Control Panel</span>
+        </button>
+        <button @onclick="YaboCon">
+
+            
+            <svg width="24px" height="24px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M17.5 17.5C20 21 23.9486 18.4151 23 15C21.5753 9.87113 20.8001 7.01556 20.3969 5.50793C20.1597 4.62136 19.3562 4 18.4384 4L5.56155 4C4.64382 4 3.844 4.62481 3.62085 5.515C2.7815 8.86349 2.0326 11.8016 1.14415 15C0.195501 18.4151 4.14415 21 6.64415 17.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M18 8.5L18.0111 8.51" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.49 7L16.5011 7.01" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.49 10L16.5011 10.01" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15 8.5L15.0111 8.51" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 7V10" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.5 8.5H8.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 16C9.10457 16 10 15.1046 10 14C10 12.8954 9.10457 12 8 12C6.89543 12 6 12.8954 6 14C6 15.1046 6.89543 16 8 16Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 16C17.1046 16 18 15.1046 18 14C18 12.8954 17.1046 12 16 12C14.8954 12 14 12.8954 14 14C14 15.1046 14.8954 16 16 16Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>@Yabo</span>
+        </button>
+    </div>
+    
+
+</main>
+<Bottombar />
+@code {
+    bool IsError = Wallpaper.IsError;
+    string ErrorMessage = Wallpaper.ErrorMessage;
+    bool isChanging = false;
+    string Yabo = "Install Yabosen-Config (Counter-Strike 2)";
+    public int WPStyle = 0;
+    private HttpClient client = new HttpClient();
+    public async void YaboCon()
+    {
+        List<string> folders = new List<string>();
+        string str1 = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\game\\csgo\\cfg";
+        if (Directory.Exists(str1))
+            folders.Add(str1);
+        foreach (DriveInfo driveInfo in Enumerable.Where<DriveInfo>((IEnumerable<DriveInfo>)DriveInfo.GetDrives(), (Func<DriveInfo, bool>)(x => x.IsReady)))
+        {
+            try
+            {
+                foreach (string directory in Directory.GetDirectories(((FileSystemInfo)driveInfo.RootDirectory).FullName, "Steam", (SearchOption)1))
+                {
+                    string str2 = Path.Combine(directory, "steamapps\\common\\Counter-Strike Global Offensive\\game\\csgo\\cfg");
+                    if (Directory.Exists(str2))
+                        folders.Add(str2);
+                }
+            }
+            catch
+            {
+            }
+        }
+        if (folders.Count == 0)
+        {
+            IsError = true;
+
+            ErrorMessage = "Could not find CS:GO cfg folder.";
+            StateHasChanged();
+
+        }
+        else
+            await this.GetFile(folders);
+    }
+    public async Task GetFile(List<string> folders)
+    {
+        try
+        {
+            using (HttpResponseMessage response = await this.client.GetAsync("https://raw.githubusercontent.com/Yabosen/YabosenCFG/main/yabosen.cfg"))
+            {
+                response.EnsureSuccessStatusCode();
+                byte[] numArray = await response.Content.ReadAsByteArrayAsync();
+                foreach (string folder in folders)
+                {
+                    string str = Path.Combine(folder, "yabosen.cfg");
+                    File.WriteAllBytes(str, numArray);
+                    Yabo = "Install Yabosen-Config(Counter - Strike 2) <installed>";
+                    StateHasChanged();
+                    // InfoDisplay infoDisplay = new InfoDisplay("YabosenCFG Succesful", "yabosen.cfg has been downloaded to " + str);
+                    // infoDisplay.ShowDialog();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            IsError = true;
+            ErrorMessage = "Error: " + ex.Message;
+            StateHasChanged();
+        }
+    }
+    public void OpenCntrl()
+    {
+        Process.Start(new ProcessStartInfo()
+        {
+            FileName = Environment.ExpandEnvironmentVariables("%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"),
+            Arguments = "start control",
+            RedirectStandardOutput = false,
+            UseShellExecute = true,
+            CreateNoWindow = true,
+            Verb = "runas"
+        });
+    }
+
+    public void Retard()
+    {
+        foreach (Process process in Process.GetProcessesByName("explorer"))
+        {
+            process.Kill();
+            Process.Start("C:\\Windows\\explorer.exe");
+        }
+    }
+    public void WallpaperChange()
+    {
+        isChanging = !isChanging;
+    }
+
+    public void ChangeWallpaper()
+    {
+        string selected = "Fill";
+        switch(WPStyle)
+        {
+            case 0:
+                selected = "Fill";
+                break;
+            case 1:
+                selected = "Fit";
+                break;
+            case 2:
+                selected = "Stretch";
+                break;
+            case 3:
+                selected = "Tile";
+                break;
+            case 4:
+                selected = "Span";
+                break;
+        }
+        OpenFileDialog openFileDialog1 = new OpenFileDialog();
+        openFileDialog1.Filter = "Image Files (*.bmp;*.jpg;*.jpeg;*.png)|*.bmp;*.jpg;*.jpeg;*.png";
+        if (openFileDialog1.ShowDialog() != DialogResult.OK)
+            return;
+        Wallpaper.Set(openFileDialog1.FileName, selected);
+        isChanging = false;
+    }
+
+    public async Task VisualC()
+    {
+        var wwwrootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
+
+        var filepath = Path.Combine(wwwrootPath, "Resources", "VisualC.zip");
+
+
+        string Paeth = Path.Combine(Path.GetTempPath(), "VisualCDstributables");
+        if (Directory.Exists(Paeth))
+        {
+            Directory.Delete(Paeth, true);
+        }
+        ZipFile.ExtractToDirectory(filepath, Paeth);
+   
+        
+        Process.Start(Path.Combine(Paeth, "install_all.bat"));
+    }
+
+    public sealed class Wallpaper
+    {
+        public static string ErrorMessage;
+        public static bool IsError;
+        private const int SPI_SETDESKWALLPAPER = 20;
+        private const int SPIF_UPDATEINIFILE = 1;
+        private const int SPIF_SENDWININICHANGE = 2;
+
+
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern int SystemParametersInfo(
+          int uAction,
+          int uParam,
+          string lpvParam,
+          int fuWinIni);
+
+        public static void Set(string file, string style)
+        {
+            using (Stream stream = (Stream)new MemoryStream(File.ReadAllBytes(file)))
+            {
+                Image image = Image.FromStream(stream);
+                string lpvParam = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
+                string filename = lpvParam;
+                ImageFormat bmp = ImageFormat.Bmp;
+                image.Save(filename, bmp);
+                RegistryKey registryKey1 = Registry.CurrentUser.OpenSubKey("Control Panel\\Desktop", true);
+                if (style == "Fill")
+                {
+                    RegistryKey registryKey2 = registryKey1;
+                    int num = 10;
+                    string str1 = num.ToString();
+                    registryKey2.SetValue("WallpaperStyle", (object)str1);
+                    RegistryKey registryKey3 = registryKey1;
+                    num = 0;
+                    string str2 = num.ToString();
+                    registryKey3.SetValue("TileWallpaper", (object)str2);
+                }
+                else if (style == "Fit")
+                {
+                    RegistryKey registryKey4 = registryKey1;
+                    int num = 6;
+                    string str3 = num.ToString();
+                    registryKey4.SetValue("WallpaperStyle", (object)str3);
+                    RegistryKey registryKey5 = registryKey1;
+                    num = 0;
+                    string str4 = num.ToString();
+                    registryKey5.SetValue("TileWallpaper", (object)str4);
+                }
+                else if (style == "Strech")
+                {
+                    RegistryKey registryKey6 = registryKey1;
+                    int num = 2;
+                    string str5 = num.ToString();
+                    registryKey6.SetValue("WallpaperStyle", (object)str5);
+                    RegistryKey registryKey7 = registryKey1;
+                    num = 0;
+                    string str6 = num.ToString();
+                    registryKey7.SetValue("TileWallpaper", (object)str6);
+                }
+                else if (style == "Tile")
+                {
+                    RegistryKey registryKey8 = registryKey1;
+                    int num = 0;
+                    string str7 = num.ToString();
+                    registryKey8.SetValue("WallpaperStyle", (object)str7);
+                    RegistryKey registryKey9 = registryKey1;
+                    num = 1;
+                    string str8 = num.ToString();
+                    registryKey9.SetValue("TileWallpaper", (object)str8);
+                }
+                else if (style == "Center")
+                {
+                    RegistryKey registryKey10 = registryKey1;
+                    int num = 0;
+                    string str9 = num.ToString();
+                    registryKey10.SetValue("WallpaperStyle", (object)str9);
+                    RegistryKey registryKey11 = registryKey1;
+                    num = 0;
+                    string str10 = num.ToString();
+                    registryKey11.SetValue("TileWallpaper", (object)str10);
+                }
+                else if (style == "Span")
+                {
+                    RegistryKey registryKey12 = registryKey1;
+                    int num = 22;
+                    string str11 = num.ToString();
+                    registryKey12.SetValue("WallpaperStyle", (object)str11);
+                    RegistryKey registryKey13 = registryKey1;
+                    num = 0;
+                    string str12 = num.ToString();
+                    registryKey13.SetValue("TileWallpaper", (object)str12);
+                }
+                else
+                {
+                    ErrorMessage = "Wallpaper fitting option not recognized. Please choose another.";
+                    IsError = true;
+
+
+                }
+                Wallpaper.SystemParametersInfo(20, 0, lpvParam, 3);
+            }
+        }
+
+        public enum Style
+        {
+            Tiled,
+            Centered,
+            Stretched,
+        }
+    }
+}
