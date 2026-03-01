@@ -1,8 +1,119 @@
 ﻿@page "/cstm"
+@using System.Diagnostics
 <Topbar />
-<h1 class="Titlebar">Customization</h1>
 
+<main>
+    <h1 class="Titlebar">Customization</h1>
+    <p class="Titlebar">Personalize your Windows experience with advanced shell replacements and visual tweaks.</p>
+
+    <div class="Mainteract">
+    <h3>OpenShell</h3>
+    <p>Classic Start Menu replacement for Windows 10 and 11.</p>
+    <button @onclick="InstallOpenShell">
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M6 20L18 20" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 4V16M12 16L15.5 12.5M12 16L8.5 12.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span>@IOS</span>
+    </button>
+        <h3>NileSoft Shell</h3>
+        <p>Powerful context menu customizer and shell extenion.</p>
+        <button @onclick="InstallNileSoftShell">
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M6 20L18 20" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 4V16M12 16L15.5 12.5M12 16L8.5 12.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>@NSS</span>
+        </button>
+        <h3>StartAllBack</h3>
+        <p>Fixes Windows 11 taskbar and start menu annoyances.</p>
+        <button @onclick="InstallStartAllBack">
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M6 20L18 20" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 4V16M12 16L15.5 12.5M12 16L8.5 12.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>@SAB</span>
+        </button>
+        <button @onclick="TrialReset">
+       
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M6.67742 20.5673C2.53141 18.0212 0.758026 12.7584 2.71678 8.1439C4.87472 3.0601 10.7453 0.68822 15.8291 2.84617C20.9129 5.00412 23.2848 10.8747 21.1269 15.9585C20.2837 17.945 18.8736 19.5174 17.1651 20.5673" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M17 16V20.4C17 20.7314 17.2686 21 17.6 21H22" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 22.01L12.01 21.9989" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>@TRS</span>
+        </button>
+        <h3>Explorer Patcher</h3>
+        <p>Enhance the taskbar and system tray.</p>
+        <button @onclick="InstallExplorerPatcher">
+          
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M6 20L18 20" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 4V16M12 16L15.5 12.5M12 16L8.5 12.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>@EP</span>
+        </button>
+    </div>
+
+
+</main>
 <Bottombar />
 @code {
+    string IOS = "Install OpenShell";
+    string NSS = "Install NileSoft Shell";
+    string SAB = "Install StartAllBack";
+    string TRS = "Trial Reset";
+    string EP = "Install Explorer Patcher";
+    public void InstallOpenShell()
+    {
+        var wwwrootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
 
+        var filepath = Path.Combine(wwwrootPath, "Resources", "OpenShellSetup_4_4_196.exe");
+        RunInstaller(filepath);
+    }
+    public void InstallNileSoftShell()
+    {
+        var wwwrootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
+        var filepath = Path.Combine(wwwrootPath, "Resources", "setup-x64.msi");
+        RunInstaller(filepath);
+    }
+    public void InstallStartAllBack()
+    {
+        var wwwrootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
+        var filepath = Path.Combine(wwwrootPath, "Resources", "StartAllBackSetup.exe");
+        RunInstaller(filepath);
+    }
+    public void InstallExplorerPatcher()
+    {
+        var wwwrootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
+        var filepath = Path.Combine(wwwrootPath, "Resources", "ep_setup.exe");
+        RunInstaller(filepath);
+    }
+    public void TrialReset()
+    {
+        var wwwrootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
+        var scriptPath = Path.Combine(wwwrootPath, "Resources", "StartAllBack.ps1");
+     
+        if (File.Exists(scriptPath))
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo("powershell.exe", $"-ExecutionPolicy Bypass -File \"{scriptPath}\"") { UseShellExecute = true, Verb = "runas" });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to run script: {ex.Message}");
+            }
+        }
+        else
+        {
+            Debug.WriteLine("StartAllBack.ps1 not found.");
+        }
+    }
+    private void RunInstaller(string path)
+    {
+        if (File.Exists(path))
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to run installer: {ex.Message}");
+               
+
+            }
+        }
+        else
+        {
+            Debug.WriteLine($"Installer not found at: {path}");
+           
+        
+        }
+    }
 }

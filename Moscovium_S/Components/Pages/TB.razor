@@ -1,8 +1,135 @@
 ﻿@page "/tb"
+@using System.Diagnostics
 <Topbar />
-<h1 class="Titlebar">Toolbox</h1>
+<main>
+    <h1 class="Titlebar">Tooblox</h1>
 
+
+    <div class="Mainteract">
+        <button @onclick="CTTW">
+            
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M4 16.9865V7.01353C4 6.71792 4.21531 6.46636 4.50737 6.42072L19.3074 4.10822C19.6713 4.05137 20 4.33273 20 4.70103V19.299C20 19.6673 19.6713 19.9486 19.3074 19.8918L4.50737 17.5793C4.21531 17.5336 4 17.2821 4 16.9865Z" stroke="#ffffff" stroke-width="1.5"></path><path d="M4 12H20" stroke="#ffffff" stroke-width="1.5"></path><path d="M10.5 5.5V18.5" stroke="#ffffff" stroke-width="1.5"></path></svg>
+            <span>@cttw</span></button>
+        <button>
+           
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M11.5 12H6.6C6.26863 12 6 12.2686 6 12.6V19.4C6 19.7314 6.26863 20 6.6 20H17.4C17.7314 20 18 19.7314 18 19.4V18.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 12V8C16 6.66667 15.2 4 12 4C11.2532 4 10.6371 4.14525 10.1313 4.38491" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 12H17.4C17.7314 12 18 12.2686 18 12.6V13" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 8V8.5V12" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 3L21 21" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>@sasb</span>
+        </button>
+        @if (shouldRestart)
+{
+        <div style="margin: auto; width: 45%;">
+            <h1 style="color: red;">Changes have been applied please restart!</h1>
+            <button @onclick="Restart">Restart now</button>
+                <button @onclick="CancelRestart" >Later</button>
+            </div>
+        }
+        <button @onclick="MAS">
+         
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M10 12C10 14.2091 8.20914 16 6 16C3.79086 16 2 14.2091 2 12C2 9.79086 3.79086 8 6 8C8.20914 8 10 9.79086 10 12ZM10 12H22V15" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M18 12V15" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>@mas</span>
+        </button>
+    </div>
+
+
+</main>
 <Bottombar />
 @code {
+    string cttw = "ChrisTitus WinUtil";
+    string sasb = "Reset Trial StartAllback";
+    string mas = "Microsoft Activation Scripts";
+    bool shouldRestart = false;
+    public void CTTW()
+    {
+        Process.Start(new ProcessStartInfo()
+        {
+            FileName = Environment.ExpandEnvironmentVariables("%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"),
+            Arguments = "iwr -useb https://christitus.com/win | iex",
+            RedirectStandardOutput = false,
+            UseShellExecute = true,
+            CreateNoWindow = false,
+            Verb = "runas"
+        });
+    }
+    public void SASB()
+    {
+        Process.Start(new ProcessStartInfo()
+        {
+            FileName = Environment.ExpandEnvironmentVariables("%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"),
+            Arguments = "iwr -useb https://git.io/JJ8Rj | iex",
+            RedirectStandardOutput = false,
+            UseShellExecute = true,
+            CreateNoWindow = false,
+            Verb = "runas"
+        });
+    }
+     public async void SABS()
+    {
+        try
+        {
+            // var SAB = Path.Combine(Path.GetTempPath(), "StartAllBack.ps1");
+            // File.WriteAllBytes(SAB, Properties.Resources.StartAllBackPs1);
+            var wwwrootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot");
+
+            var SAB = Path.Combine(wwwrootPath, "Resources", "StartAllBack.ps1");
+            if (System.IO.File.Exists(SAB))
+            {
+              
+                var proc = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = $"-ExecutionPolicy Bypass -File \"{SAB}\"",
+                    UseShellExecute = true,
+                    Verb = "runas"
+                });
+                if (proc != null)
+                {
+                    await System.Threading.Tasks.Task.Run(() => proc.WaitForExit());
+                    shouldRestart = true;
+                    StateHasChanged();
+                    // RestartStuff restartStuff = new RestartStuff();
+                    // restartStuff.ShowDialog();
+                    // if (restartStuff.Answer == "restart")
+                    // {
+                    //     System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+                    // }
+                }
+
+
+            }
+            else
+            {
+                // MessageDisplay msd = new MessageDisplay("Moscovium Lite Error", "StartAllBack.ps1 not found.");
+                // msd.ShowDialog();
+            }
+        }
+        catch (Exception ex)
+        {
+            // MessageDisplay msd = new MessageDisplay("Moscovium Lite Error", $"Failed to run script: {ex.Message}");
+            // msd.ShowDialog();
+            return;
+        }
+    }
+
+    public void Restart()
+    {
+        System.Diagnostics.Process.Start("shutdown", "/r /t 0");
+    }
+    public void CancelRestart()
+    {
+        shouldRestart = false;
+        StateHasChanged();
+    }
+    public void MAS()
+    {
+        Process.Start(new ProcessStartInfo()
+        {
+            FileName = Environment.ExpandEnvironmentVariables("%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"),
+            Arguments = "irm https://get.activated.win | iex",
+            RedirectStandardOutput = false,
+            UseShellExecute = true,
+            CreateNoWindow = false,
+            Verb = "runas"
+        });
+    }
 
 }

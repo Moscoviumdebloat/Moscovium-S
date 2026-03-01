@@ -34,6 +34,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\Resources\Debloat.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Resources\ep_setup.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Resources\OpenShellSetup_4_4_196.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Resources\setup-x64.msi">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Resources\StartAllBack.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\Resources\VisualC.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

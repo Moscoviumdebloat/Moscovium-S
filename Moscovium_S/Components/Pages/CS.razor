@@ -1,0 +1,178 @@
+﻿@page "/cs"
+@using System.Diagnostics
+@using System.IO.Compression
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.Win32
+@using System.Drawing.Imaging
+@using System.Runtime.InteropServices
+
+<Topbar />
+
+<main>
+    <h1 class="Titlebar">Counter-Strike 2</h1>
+    
+    <div class="Mainteract">
+
+      
+        <button @onclick="YaboCon">
+
+            
+            <svg width="24px" height="24px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M17.5 17.5C20 21 23.9486 18.4151 23 15C21.5753 9.87113 20.8001 7.01556 20.3969 5.50793C20.1597 4.62136 19.3562 4 18.4384 4L5.56155 4C4.64382 4 3.844 4.62481 3.62085 5.515C2.7815 8.86349 2.0326 11.8016 1.14415 15C0.195501 18.4151 4.14415 21 6.64415 17.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M18 8.5L18.0111 8.51" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.49 7L16.5011 7.01" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16.49 10L16.5011 10.01" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M15 8.5L15.0111 8.51" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 7V10" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5.5 8.5H8.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 16C9.10457 16 10 15.1046 10 14C10 12.8954 9.10457 12 8 12C6.89543 12 6 12.8954 6 14C6 15.1046 6.89543 16 8 16Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M16 16C17.1046 16 18 15.1046 18 14C18 12.8954 17.1046 12 16 12C14.8954 12 14 12.8954 14 14C14 15.1046 14.8954 16 16 16Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>@Yabo</span>
+        </button>
+        <button @onclick="ImportConfig" >
+            <?xml version="1.0" encoding="UTF-8" ?>
+            <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M6 20L18 20" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 16V4M12 4L15.5 7.5M12 4L8.5 7.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span>Import CS2 Config</span>
+        </button>
+
+        <h4>Recommended Launch Options</h4>
+        <div style="flex">
+            <p class="zap">-high -novid -allow_third_party_software -tickrate 128 -noaafonts</p>
+            <button @onclick="CopyLaunchOptions" style="width:6rem;">Copy</button>
+        </div>
+    </div>
+    
+
+</main>
+<Bottombar />
+@code {
+    private static readonly HttpClient _httpClient = new();
+  
+    bool isChanging = false;
+    string Yabo = "Install Yabosen-Config (Counter-Strike 2)";
+    string cs3 = "Import CS2 Config";
+    public int WPStyle = 0;
+
+    private HttpClient client = new HttpClient();
+    public void CopyLaunchOptions()
+    {
+        var launchOptions = "-high -novid -allow_third_party_software -tickrate 128 -noaafonts";
+        Clipboard.SetText(launchOptions);
+    }
+    public async void ImportConfig()
+    {
+        OpenFileDialog openFileDialog1 = new OpenFileDialog();
+        openFileDialog1.Filter = "CS2 Config Files (*.cfg)|*.cfg";
+        openFileDialog1.Title = "Select your CS2 Config";
+        openFileDialog1.Multiselect = true;
+        if (openFileDialog1.ShowDialog() != DialogResult.OK)
+        {
+            var items = openFileDialog1.FileNames;
+            var folders = SteamPathHelper.FindCfgFolders();
+
+            if (folders.Count == 0)
+            {
+                cs3 = "Import CS2 Config (couldn't find folder) <failed>";
+                StateHasChanged();
+                // await ShowError("Could not find CS2 cfg folder.");
+                return;
+            }
+
+            foreach (var item in items)
+            {
+                
+                  
+
+                    foreach (var folder in folders)
+                    {
+                        var dest = Path.Combine(folder, item);
+                        File.Copy(item, dest, true);
+                    }
+                cs3 = $"'{Path.GetFileName(item)}' copied to {folders.Count} CS2 cfg location(s) <installed>";
+                StateHasChanged();
+                    // await ShowInfo($"'{file.Name}' copied to {folders.Count} CS2 cfg location(s).");
+                
+            }
+        }
+
+    }
+    public async void YaboCon()
+    {
+        var folders = SteamPathHelper.FindCfgFolders();
+        if (folders.Count == 0)
+        {
+            Yabo = "Install Yabosen-Config (Counter-Strike 2) {couldn't find folder} <failed>";
+            StateHasChanged();
+            return;
+        }
+
+        try
+        {
+            var response = await _httpClient.GetAsync("https://raw.githubusercontent.com/Yabosen/YabosenCFG/main/yabosen.cfg");
+            response.EnsureSuccessStatusCode();
+            var data = await response.Content.ReadAsByteArrayAsync();
+
+            foreach (var folder in folders)
+            {
+                var dest = Path.Combine(folder, "yabosen.cfg");
+                File.WriteAllBytes(dest, data);
+            }
+
+                Yabo = "Install Yabosen-Config (Counter-Strike 2) <installed>";
+            StateHasChanged();
+         
+        }
+        catch (Exception ex)
+        {
+                Yabo = "Install Yabosen-Config (Counter-Strike 2) <failed>";
+            StateHasChanged();
+           
+        }
+        // List<string> folders = new List<string>();
+        // string str1 = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\game\\csgo\\cfg";
+        // if (Directory.Exists(str1))
+        //     folders.Add(str1);
+        // foreach (DriveInfo driveInfo in Enumerable.Where<DriveInfo>((IEnumerable<DriveInfo>)DriveInfo.GetDrives(), (Func<DriveInfo, bool>)(x => x.IsReady)))
+        // {
+        //     try
+        //     {
+        //         foreach (string directory in Directory.GetDirectories(((FileSystemInfo)driveInfo.RootDirectory).FullName, "Steam", (SearchOption)1))
+        //         {
+        //             string str2 = Path.Combine(directory, "steamapps\\common\\Counter-Strike Global Offensive\\game\\csgo\\cfg");
+        //             if (Directory.Exists(str2))
+        //                 folders.Add(str2);
+        //         }
+        //     }
+        //     catch
+        //     {
+        //     }
+        // }
+        // if (folders.Count == 0)
+        // {
+        //     IsError = true;
+
+        //     ErrorMessage = "Could not find CS:GO cfg folder.";
+        //     StateHasChanged();
+
+        // }
+        // else
+        //     await this.GetFile(folders);
+    }
+    public async Task GetFile(List<string> folders)
+    {
+        try
+        {
+            using (HttpResponseMessage response = await this.client.GetAsync("https://raw.githubusercontent.com/Yabosen/YabosenCFG/main/yabosen.cfg"))
+            {
+                response.EnsureSuccessStatusCode();
+                byte[] numArray = await response.Content.ReadAsByteArrayAsync();
+                foreach (string folder in folders)
+                {
+                    string str = Path.Combine(folder, "yabosen.cfg");
+                    File.WriteAllBytes(str, numArray);
+                    Yabo = "Install Yabosen-Config(Counter - Strike 2) <installed>";
+                    StateHasChanged();
+                    // InfoDisplay infoDisplay = new InfoDisplay("YabosenCFG Succesful", "yabosen.cfg has been downloaded to " + str);
+                    // infoDisplay.ShowDialog();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+          
+            StateHasChanged();
+        }
+    }
+   
+}
