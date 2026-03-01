@@ -50,7 +50,6 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(937, 687);
             Name = "Form1";
-            ShowIcon = false;
             Load += Form1_Load;
             ResumeLayout(false);
         }
