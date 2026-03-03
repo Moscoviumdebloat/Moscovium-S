@@ -52,8 +52,6 @@ Compared to Moscovium 3, Moscovium S features:
 | Interface | Legacy | Modern (Blazor) |
 | Performance | Standard | Optimized |
 | Stability | Good | Excellent |
-| Customization | Basic | Advanced |
-| UI Responsiveness | Moderate | Smooth |
 
 ## System Requirements
 
