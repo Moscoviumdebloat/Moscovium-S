@@ -26,14 +26,6 @@ Download the latest release from [GitHub](https://github.com/Moscoviumdebloat/Mo
 
 ![Screenshot Placeholder](Screenshot%202026-03-03%20223423.png)
 
-1. **Launch** the Moscovium S application
-2. **Select** the debloating profile or individual components to remove
-3. **Review** the changes to be made
-4. **Execute** the debloating process
-5. **Restart** your system if prompted
-
-> **Warning**: Always create a system restore point before debloating. Moscovium S is provided as-is and should be used with caution.
-
 ## What's New in Moscovium S
 
 Compared to Moscovium 3, Moscovium S features:
